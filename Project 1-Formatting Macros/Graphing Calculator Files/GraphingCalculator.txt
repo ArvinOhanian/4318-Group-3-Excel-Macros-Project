@@ -1,0 +1,244 @@
+Sub CreateChart()
+    Dim start As Integer
+    Dim lastRow As Integer
+    Dim chartData As Range
+    Dim chartPlot As Range
+    Dim chartObj As Object
+    Dim chrt As Chart
+    Dim chartType As String
+    Dim markers As Boolean
+    Dim objTrendline As Trendline
+    Dim x_val As String
+    Dim y_val As String
+    Dim i As Integer
+    Dim j As Integer
+    
+    markers = True
+    
+    Set chartObj = ActiveSheet.Shapes.AddChart2
+    chartObj.Height = 350
+    chartObj.Width = 550
+    Workbooks(1).Activate
+    Range(Selection(1, 1).Address).Select
+    Set chartData = Range(Selection(1, 1).Offset(-2, 0), Selection(1, 1).Offset(-1, 1))
+    Set chartPlot = findRange(Selection(1, 1))
+    
+    With chartObj.Chart
+        .SetSourceData Source:=chartPlot, PlotBy:=xlColumns
+        .SeriesCollection(2).XValues = chartPlot.Columns(1)
+        chartType = UCase(chartData(1, 2))
+        .ChartArea.Font.size = 10
+        
+        Select Case chartType
+        Case "SCATTER"
+            .chartType = xlXYScatter
+        Case "SCATTER SMOOTH"
+            .chartType = xlXYScatterSmooth
+        Case "SCATTER LINES"
+            .chartType = xlXYScatterLines
+        Case "SCATTER LINES NO MARKERS"
+            markers = False
+            .chartType = xlXYScatterLinesNoMarkers
+        Case "SCATTER SMOOTH NO MARKERS"
+            markers = False
+            .chartType = xlXYScatterSmoothNoMarkers
+        Case "LINE"
+            markers = False
+            .chartType = xlLine
+        Case "LINE MARKERS"
+            .chartType = xlLineMarkers
+        Case Else
+            .chartType = xlXYScatterLines
+        End Select
+        
+        .HasTitle = True
+        .ChartTitle.Text = chartData(1, 1)
+        .ChartTitle.Font.Bold = True
+        .ChartTitle.Font.size = 20
+        .SeriesCollection(1).Delete
+        '.Legend.LegendEntries(1).Delete
+        
+        With .Axes(xlValue)
+            .HasTitle = True
+            .AxisTitle.Orientation = 0
+            .AxisTitle.Text = chartData(2, 1)
+            .AxisTitle.Font.size = 12
+            .AxisTitle.left = 1
+            .TickLabels.Font.Italic = True
+            .HasMajorGridlines = True
+            .MajorGridlines.Border.Color = RGB(192, 192, 192)
+            .MajorGridlines.Border.LineStyle = xlDash
+        End With
+        
+        With .Axes(xlCategory)
+            .HasTitle = True
+            .AxisTitle.Text = chartData(2, 2)
+            .AxisTitle.Orientation = 0
+            .AxisTitle.Font.size = 12
+            .TickLabels.Font.Italic = True
+            .HasMajorGridlines = True
+            .MajorGridlines.Border.Color = RGB(192, 192, 192)
+            .MajorGridlines.Border.LineStyle = xlDash
+        End With
+        
+        If markers Then
+            .SetElement (msoElementDataLabelCenter)
+            
+            With .SeriesCollection(1)
+                .Format.Line.ForeColor.RGB = RGB(150, 150, 213)
+                .Format.Fill.ForeColor.RGB = RGB(120, 120, 183)
+                
+                For i = 1 To .DataLabels.Count
+                    x_val = chartPlot(i, 1)
+                    y_val = chartPlot(i, 2)
+                
+                    If x_val > 100000 Then
+                        x_val = Format(CDbl(x_val), "Scientific")
+                    End If
+                    
+                    If y_val > 100000 Then
+                        y_val = Format(CDbl(y_val), "Scientific")
+                    End If
+                
+                    .DataLabels(i).Text = "(" & x_val & "," & y_val & ")"
+                    .DataLabels(i).left = .DataLabels(i).left + 15
+                    .DataLabels(i).Top = .DataLabels(i).Top + 5
+                Next i
+            End With
+        Else
+            With .SeriesCollection(1)
+                .Format.Line.ForeColor.RGB = RGB(150, 150, 213)
+                .Format.Fill.ForeColor.RGB = RGB(120, 120, 183)
+            End With
+        End If
+        
+        .SeriesCollection(1).Trendlines.Add
+        
+        Set objTrendline = .SeriesCollection(1).Trendlines(1)
+        With objTrendline
+            .DisplayRSquared = False
+            .DisplayEquation = True
+        End With
+    End With
+End Sub
+
+Public Function findRange(startRange As Range) As Range
+
+    Dim sampleRange As Range
+    Dim endRange As Range
+
+    Set sampleRange = startRange
+    
+    While sampleRange <> ""
+        Set sampleRange = sampleRange.Offset(1, 0)
+    Wend
+    
+    Set endRange = sampleRange.Offset(-1, 1)
+    Set findRange = Range(startRange, endRange)
+    
+End Function
+
+Sub fOfx()
+    Dim p7 As Double
+    Dim p6 As Double
+    Dim p5 As Double
+    Dim p4 As Double
+    Dim p3 As Double
+    Dim p2 As Double
+    Dim p1 As Double
+    Dim p0 As Double
+    Dim at As Integer
+    Dim i As Integer
+    Dim j As Double
+    Dim samples As Double
+    Dim deleteRange As Range
+    
+    Dim left As Double
+    Dim right As Double
+    
+    Dim rng As Range
+    Set rng = Selection
+    
+    Set deleteRange = findRange(Selection(1, 1))
+    
+    For i = 2 To deleteRange.Rows.Count
+        deleteRange(i, 1) = ""
+        deleteRange(i, 2) = ""
+    Next i
+    
+    Dim poly1 As Variant
+    ReDim poly1(0 To 7)
+    
+    p7 = rng.Cells(RowIndex:=1, ColumnIndex:=1)
+    p6 = rng.Cells(RowIndex:=1, ColumnIndex:=2)
+    p5 = rng.Cells(RowIndex:=1, ColumnIndex:=3)
+    p4 = rng.Cells(RowIndex:=1, ColumnIndex:=4)
+    p3 = rng.Cells(RowIndex:=1, ColumnIndex:=5)
+    p2 = rng.Cells(RowIndex:=1, ColumnIndex:=6)
+    p1 = rng.Cells(RowIndex:=1, ColumnIndex:=7)
+    p0 = rng.Cells(RowIndex:=1, ColumnIndex:=8)
+    left = rng.Cells(RowIndex:=1, ColumnIndex:=9)
+    right = rng.Cells(RowIndex:=1, ColumnIndex:=10)
+    
+    poly1(0) = p7
+    poly1(1) = p6
+    poly1(2) = p5
+    poly1(3) = p4
+    poly1(4) = p3
+    poly1(5) = p2
+    poly1(6) = p1
+    poly1(7) = p0
+    
+    at = 1
+    
+    While at <= 10
+        rng.Cells(RowIndex:=1, ColumnIndex:=at) = ""
+        at = at + 1
+    Wend
+    
+    Dim at1 As Integer
+    Dim fAt As Double
+    
+    at1 = 1
+    j = left
+    While j <= right + 0.1
+        If j < 0.00000001 And j > -0.00000001 Then
+            rng.Cells(RowIndex:=at1, ColumnIndex:=1) = 0
+        Else
+            rng.Cells(RowIndex:=at1, ColumnIndex:=1) = j
+        End If
+        fAt = funcAt(j, p7, p6, p5, p4, p3, p2, p1, p0)
+        If fAt < 0.00000001 And fAt > -0.00000001 Then
+            fAt = 0
+        End If
+        rng.Cells(RowIndex:=at1, ColumnIndex:=2) = fAt
+        at1 = at1 + 1
+        j = j + 0.1
+    Wend
+    
+    CreateChart
+    
+End Sub
+
+Function funcAt(x As Double, p7 As Double, p6 As Double, p5 As Double, p4 As Double, p3 As Double, p2 As Double, p1 As Double, p0 As Double) As Double
+    Dim t7 As Double
+    Dim t6 As Double
+    Dim t5 As Double
+    Dim t4 As Double
+    Dim t3 As Double
+    Dim t2 As Double
+    Dim t1 As Double
+    Dim t0 As Double
+    
+    t7 = p7 * (x ^ 7)
+    t6 = p6 * (x ^ 6)
+    t5 = p5 * (x ^ 5)
+    t4 = p4 * (x ^ 4)
+    t3 = p3 * (x ^ 3)
+    t2 = p2 * (x ^ 2)
+    t1 = p1 * (x)
+    t0 = p0
+    
+    funcAt = t7 + t6 + t5 + t4 + t3 + t2 + t1 + t0
+End Function
+
