@@ -224,4 +224,4 @@ Public Function findDeterminant(m1 As Variant) As Double
     
     findDeterminant = WorksheetFunction.MDeterm(m1)
     
-End Function
+End Function 
