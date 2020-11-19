@@ -1,5 +1,5 @@
 # 4318-Group-3-Excel-Macros-Project
-## This Three projects involved the use of Excel VBA code, to develop several excel macros for users to use in areas like Fromatting and Mathematics. 
+## These Three projects involved the use of Excel VBA code, to develop several excel macros for users to use in areas like Fromatting and Mathematics. 
 ### *This Project includes:*
 
 1. - [x] Fromatting Macros. 
