@@ -1,0 +1,32 @@
+Sub calcCost()
+    Dim tax As Double
+    Dim sum As Double
+    Dim cost As Double
+    'initialize sum as zero
+    sum = 0
+    Dim myRange As Range
+    Dim myCell As Range
+    Set myRange = Selection
+    For Each myCell In myRange
+        'total up values in selection
+        sum = sum + myCell.Value
+        ActiveCell.Offset(1, 0).Select
+    Next myCell
+    'show cost without tax calc
+    ActiveCell.Value = "Cost w/o Tax"
+    ActiveCell.Offset(1, 0).Activate
+    sum = FormatCurrency(sum)
+    ActiveCell.Value = sum
+    'enter tax percentage
+    tax = InputBox("Enter Value", "Enter Tax Percent")
+    'convert tax percent to decimal
+    tax = tax / 100
+    'calculate cost with tax
+    cost = sum + sum * tax
+    cost = FormatCurrency(cost)
+    ActiveCell.Offset(1, 0).Activate
+    'show cost with tax
+    ActiveCell.Value = "Cost w/ Tax"
+    ActiveCell.Offset(1, 0).Activate
+    ActiveCell.Value = cost
+End Sub
