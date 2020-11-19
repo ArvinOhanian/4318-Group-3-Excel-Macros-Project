@@ -1,0 +1,297 @@
+Option Explicit
+Sub Area()
+
+'variables
+Dim UserInput As String
+Dim answer As Integer
+Dim again As String
+
+UserInput = InputBox(Prompt:="Choose a number between 1 and 5" & vbNewLine & "1 = Circle" & vbNewLine & "2 = Rectangule/Square" & vbNewLine & "3 = Trapeziod" & vbNewLine & "4 = Triangle" & vbNewLine & "5 = Pentagon")
+
+' if user inputs cancel
+If StrPtr(UserInput) = 0 Then
+        MsgBox ("Sorry to see you go, please run the macro again")
+ ' find user doesn't input anything
+ ElseIf UserInput = vbNullString Then
+        MsgBox ("Please input a value to select a shape, next time")
+    End If
+   
+'user selection
+
+Select Case UserInput
+Case 1
+MsgBox "Circle"
+Call find_circle
+   
+Case 2
+MsgBox "Rectangule/Square"
+Call find_rect
+
+Case 3
+MsgBox "Trapeziod"
+Call find_trap
+
+Case 4
+MsgBox "Triangle"
+Call find_tran
+
+Case 5
+MsgBox "Pentagon"
+Call n_tagon
+
+End Select
+
+'To ask the user to run the macro multiple times
+again = MsgBox("Do you want to run this macro again?", vbYesNo + vbQuestion)
+If again = vbYes Then
+Call Area
+Else
+ Exit Sub
+End If
+ 
+End Sub
+
+Sub find_circle()
+' find the area of a circle
+    Dim answer As Double
+    Dim radius As String
+   
+
+    ' pi will be a constant
+    Dim p As Double
+    p = WorksheetFunction.Pi()
+    
+
+    ' asking the user for the radius
+    radius = InputBox("Enter the radius")
+    
+    ' if user inputs cancel
+    If StrPtr(radius) = 0 Then
+       Exit Sub
+    ' find user doesn't input anything
+    ElseIf radius = vbNullString Then
+        MsgBox ("Please eneter a value for the radius")
+        Exit Sub
+    End If
+      
+    ' Calculate area
+    answer = p * radius ^ 2
+  
+    ' show the user
+    MsgBox ("The Area = " & answer)
+    
+    '  draw the shape and display the areas
+     With ActiveSheet.Shapes.AddShape(msoShapeOval, 100, 100, radius * 2, radius * 2)
+        .Name = "ciricle"
+        .Fill.ForeColor.RGB = vbGreen
+        .Line.Transparency = 0.8
+        .Placement = 1
+        .TextFrame.Characters.Text = "Area = " & answer
+        .TextFrame.Characters.Font.Color = 1
+        .TextFrame.HorizontalAlignment = xlHAlignCenter
+        .TextFrame.VerticalAlignment = xlVAlignCenter
+        
+    End With
+End Sub
+
+Sub find_rect()
+'find the area of a rectangule
+    Dim answer As Double
+    Dim wi As String
+    Dim le As String
+   
+ ' asking the user for the radius
+    wi = InputBox("Enter the withd")
+    
+     ' if user inputs cancel
+    If StrPtr(wi) = 0 Then
+       Exit Sub
+    ' find user doesn't input anything
+    ElseIf wi = vbNullString Then
+        MsgBox ("Please input a value next time")
+        Exit Sub
+    End If
+    
+    
+   ' asking the user for the lenght
+     le = InputBox("Enter the lenght")
+     
+       ' if user inputs cancel
+    If StrPtr(le) = 0 Then
+       Exit Sub
+    ' find user doesn't input anything
+    ElseIf le = vbNullString Then
+        MsgBox ("Please input a value next time")
+        Exit Sub
+    End If
+    
+    answer = wi * le
+    
+    ' show the user
+    MsgBox ("The Area = " & answer)
+    
+    '  draw the shape and display the areas
+     With ActiveSheet.Shapes.AddShape(msoShapeRectangle, 100, 100, wi, le)
+        .Name = "ciricle"
+        .Fill.ForeColor.RGB = vbYellow
+        .Line.Transparency = 0.5
+        .Placement = 1
+        .TextFrame.Characters.Text = "Area = " & answer
+        .TextFrame.Characters.Font.Color = 1
+        .TextFrame.HorizontalAlignment = xlHAlignCenter
+        .TextFrame.VerticalAlignment = xlVAlignCenter
+        
+  End With
+End Sub
+
+Sub find_trap()
+'find the area of a trapezoid
+    Dim answer As Double
+    Dim a_base As String
+    Dim b_base As String
+    Dim height As String
+    
+   
+ ' asking the user for the radius
+   a_base = InputBox("Enter the short base ")
+   
+    ' if user inputs cancel
+    If StrPtr(a_base) = 0 Then
+       Exit Sub
+    ' find user doesn't input anything
+    ElseIf a_base = vbNullString Then
+        MsgBox ("Please input a value next time")
+        Exit Sub
+    End If
+    
+    b_base = InputBox("Enter the long base ")
+    
+     ' if user inputs cancel
+    If StrPtr(b_base) = 0 Then
+       Exit Sub
+    ' find user doesn't input anything
+    ElseIf b_base = vbNullString Then
+        MsgBox ("Please input a value next time")
+        Exit Sub
+    End If
+    
+    height = InputBox("Enter the height")
+    
+     ' if user inputs cancel
+    If StrPtr(height) = 0 Then
+       Exit Sub
+    ' find user doesn't input anything
+    ElseIf height = vbNullString Then
+        MsgBox ("Please input a value next time")
+        Exit Sub
+    End If
+    
+    answer = ((a_base + b_base) / 2) * height
+    
+    ' show the user
+    MsgBox ("The Area = " & answer)
+    
+    '  draw the shape and display the areas
+     With ActiveSheet.Shapes.AddShape(msoShapeTrapezoid, 50, a_base, b_base, height)
+        .Name = "ciricle"
+        .Fill.ForeColor.RGB = vbRed
+        .Line.Transparency = 0.5
+        .Placement = 1
+        .TextFrame.Characters.Text = "Area = " & answer
+        .TextFrame.Characters.Font.Color = 1
+        .TextFrame.HorizontalAlignment = xlHAlignCenter
+        .TextFrame.VerticalAlignment = xlVAlignCenter
+  End With
+        
+ End Sub
+ 
+ Sub find_tran()
+'find the area of a triangle
+    Dim answer As Double
+    Dim base As String
+    Dim height As String
+    
+   
+ ' asking the user for the the shape mesurments
+   base = InputBox("Enter the base ")
+   
+    ' if user inputs cancel
+    If StrPtr(base) = 0 Then
+       Exit Sub
+    ' find user doesn't input anything
+    ElseIf base = vbNullString Then
+        MsgBox ("Please input a value next time")
+        Exit Sub
+    End If
+    
+   ' asking the user for the the shape mesurments
+   height = InputBox("Enter the height")
+   
+    ' if user inputs cancel
+    If StrPtr(height) = 0 Then
+       Exit Sub
+    ' find user doesn't input anything
+    ElseIf height = vbNullString Then
+        MsgBox ("Please input a value next time")
+        Exit Sub
+    End If
+    
+    answer = 0.5 * base * height
+    
+    ' show the user
+    MsgBox ("The Area = " & answer)
+    
+    '  draw the shape and display the areas
+     With ActiveSheet.Shapes.AddShape(msoShapeIsoscelesTriangle, 50, 60, base, height)
+        .Name = "ciricle"
+        .Fill.ForeColor.RGB = vbRed
+        .Line.Transparency = 0.5
+        .Placement = 1
+        .TextFrame.Characters.Text = "Area = " & answer
+        .TextFrame.Characters.Font.Color = 1
+        .TextFrame.HorizontalAlignment = xlHAlignCenter
+        .TextFrame.VerticalAlignment = xlVAlignCenter
+  End With
+        
+ End Sub
+ 
+ Sub n_tagon()
+'find the area of a triangle
+    Dim answer As Double
+    Dim side As String
+ 
+ ' asking the user for the the shape mesurments
+   side = InputBox("Enter the side lenght ")
+    ' if user inputs cancel
+    If StrPtr(side) = 0 Then
+       Exit Sub
+    ' find user doesn't input anything
+    ElseIf side = vbNullString Then
+        MsgBox ("Please input a value next time")
+        Exit Sub
+    End If
+   
+    answer = 0.25 * Sqr(5 * (5 + 2 * Sqr(5) * side ^ (2)))
+    
+    
+    ' show the user
+    MsgBox ("The Area = " & answer)
+    
+    '  draw the shape and display the areas
+     With ActiveSheet.Shapes.AddShape(msoShapeRegularPentagon, 50, 50, side, side)
+        .Name = "ciricle"
+        .Fill.ForeColor.RGB = vbGreen
+        .Line.Transparency = 0.5
+        .Placement = 1
+        .TextFrame.Characters.Text = "Area = " & answer
+        .TextFrame.Characters.Font.Color = 1
+        .TextFrame.HorizontalAlignment = xlHAlignCenter
+        .TextFrame.VerticalAlignment = xlVAlignCenter
+  End With
+        
+ End Sub
+ 
+ 
+ 
+ 
+ 
